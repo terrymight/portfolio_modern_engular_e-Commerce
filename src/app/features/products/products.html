@@ -1,0 +1,116 @@
+<div class="container">
+  <h1>Product Management</h1>
+
+  <div class="controls-panel">
+    <div class="filter-group">
+      <select [(ngModel)]="selectedCategoryId" (change)="applyFilters()">
+        <option [ngValue]="null">All Categories</option>
+        <option *ngFor="let cat of categories$ | async" [ngValue]="cat.id">
+          {{ cat.name }}
+        </option>
+      </select>
+
+      <input
+        type="date"
+        [(ngModel)]="startDate"
+        (change)="applyFilters()"
+        placeholder="Start Date"
+      />
+      <input
+        type="date"
+        [(ngModel)]="endDate"
+        (change)="applyFilters()"
+        placeholder="End Date"
+      />
+
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="applyFilters()"
+        placeholder="Search products..."
+      />
+
+      <button (click)="resetFilters()">Reset</button>
+    </div>
+
+    <div class="action-group">
+      <button class="btn-primary" (click)="createNewProduct()">
+        + Create New Product
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="viewData$ | async as vm">
+    <div class="pagination-controls top">
+      <label
+        >Show
+        <select
+          [ngModel]="vm.itemsPerPage"
+          (ngModelChange)="onPageSizeChange($event)"
+        >
+          <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+            {{ size }}
+          </option>
+        </select>
+        entries
+      </label>
+      <span>Total: {{ vm.totalItems }} records</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Image</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of vm.data">
+          <td>{{ product.id }}</td>
+          <td><img [src]="product.images[0]" height="100" width="100" class="thumb" /></td>
+          <td>
+            <strong>{{ product.title }}</strong>
+            <p class="small-desc">
+              {{ product.description | slice: 0:50 }}...
+            </p>
+          </td>
+          <td>{{ product.category.name }}</td>
+          <td>${{ product.price }}</td>
+          <td>{{ product.creationAt | date: 'mediumDate' }}</td>
+          <td>
+            <button (click)="editProduct(product)">Edit</button>
+            <button (click)="deleteProduct(product.id)" class="btn-danger">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="vm.data.length === 0">
+          <td colspan="7">No products found matching filters.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-footer">
+      <button
+        [disabled]="vm.currentPage === 1"
+        (click)="onPageChange(vm.currentPage - 1)"
+      >
+        Previous
+      </button>
+
+      <span>Page {{ vm.currentPage }} of {{ vm.totalPages }}</span>
+
+      <button
+        [disabled]="vm.currentPage >= vm.totalPages"
+        (click)="onPageChange(vm.currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </ng-container>
+</div>

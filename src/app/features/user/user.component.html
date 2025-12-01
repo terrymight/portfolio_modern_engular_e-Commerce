@@ -1,0 +1,47 @@
+<div class="container">
+  <h1>Users</h1>
+
+  <button (click)="addUser()">+ Add User</button>
+  <select [(ngModel)]="userRoleId" (change)="applyFilters()">
+<option [ngValue]="null">All Categories</option>
+<option *ngFor="let cat of userRole$ | async" [ngValue]="cat">
+    {{ cat }}
+</option>
+</select>
+
+<input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="applyFilters()"
+        placeholder="Search users..."
+      />
+
+  <div *ngIf="loading$ | async">Loading...</div>
+
+  <table *ngIf="users$ | async as users">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button (click)="updateUser(user)">Edit</button>
+          <button (click)="deleteUser(user.id)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="users.length === 0">
+        <td colspan="5">No users found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

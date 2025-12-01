@@ -1,0 +1,71 @@
+
+
+<div class="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+    <form  
+    [formGroup]="loginForm" 
+    (ngSubmit)="onSubmit()"
+    novalidate
+    class="w-full max-w-md bg-white p-6 rounded-2xl shadow-md space-y-4"
+    >
+        <h2 class="text-2xl font-semibold text-gray-800 text-center">Sign in</h2>
+
+         <!-- Email -->
+        <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+                id="email"
+                type="email"
+                formControlName="email"
+                autocomplete="off"
+                class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-3 py-2"
+                aria-invalid="{{ loginForm.get('email')?.invalid }}"
+                aria-describedby="email-error"
+            />
+            <p id="email-error" class="mt-1 text-sm text-red-600" *ngIf="emailInvalid">
+                {{ emailErrorMessage }}
+            </p>
+        </div>
+        
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-text-color mb-1">Password</label>
+            <input
+                id="password"
+                type="password"
+                formControlName="password"
+                autocomplete="off"
+                class="block w-full rounded-md border-gray-300  focus:border-primary border focus:ring-1 focus:ring-indigo-500 px-3 py-2"
+                aria-invalid="{{ loginForm.get('password')?.invalid }}"
+                aria-describedby="password-error"
+            />
+            <p id="password-error" class="mt-1 text-sm text-red-600" *ngIf="passwordInvalid">
+                {{ passwordErrorMessage }}
+            </p>
+        </div>
+
+        <!-- Server / generic error -->
+        <div *ngIf="error" id="form-error" class="text-sm text-red-700" aria-live="polite">
+        {{ error }}
+        </div>
+        
+        <!-- Actions -->
+        <div class="space-y-3">
+        <button
+            type="submit"
+            [disabled]="loginForm.invalid || loading"
+            class="w-full inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium
+                text-white bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-live="polite"
+        >
+            <span *ngIf="!loading">Sign in</span>
+            <span *ngIf="loading">Signing in…</span>
+        </button>
+
+            <!-- Sign up link on its own line, centered -->
+            <div class="text-left">
+                <a href="#" class="text-sm font-semibold underline text-indigo-600 hover:text-indigo-800">Sign up</a>
+            </div>
+        </div>
+
+    </form>
+</div>

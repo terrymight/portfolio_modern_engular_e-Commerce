@@ -10,6 +10,11 @@ import { ProductEffects } from './store/product/product.effects';
 import { UserReducer } from './store/users/user.reducer';
 import { UserEffects } from './store/users/user.effects';
 
+import Aura from '@primeuix/themes/aura';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { providePrimeNG } from 'primeng/config';
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -26,5 +31,12 @@ export const appConfig: ApplicationConfig = {
 
     // Effects
     provideEffects(ProductEffects, UserEffects),
+
+    provideAnimationsAsync(),
+    providePrimeNG({
+        theme: {
+            preset: Aura
+        }
+    })
   ],
 };

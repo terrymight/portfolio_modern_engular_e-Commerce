@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ToastService } from '../../service/toast/toast.service';
 
 @Component({
     standalone: true,
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class DashboadComponent implements OnInit {
-    constructor() { }
+    private toast = inject(ToastService);
 
     ngOnInit() { }
 }

@@ -15,5 +15,10 @@ export const productRoutes: Routes = [
         path: 'user-management',
         loadComponent: () => import('./user/user.component')
         .then(m => m.UserComponent )
-    }
+    },
+    {
+        path: 'dashboard',
+        loadComponent: () => import('./dashboard/dashboard.component')
+        .then(m => m.DashboadComponent )
+    },
 ];

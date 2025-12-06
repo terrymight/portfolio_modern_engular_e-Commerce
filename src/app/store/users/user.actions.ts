@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { CreateUserDto, UpdateUserDto, User, UserFilter } from "../../models/user/user.model";
+import { CreateUserDto, ServerError, UpdateUserDto, User, UserFilter } from "../../models/user/user.model";
 
 export const loadUsers = createAction('[User API] Load Users');
 export const loadUserSuccess = createAction(
@@ -47,7 +47,7 @@ export const deleteUserSuccess = createAction(
 // Generic Failure action for all CRUD operations
 export const apiCallFailure = createAction(
   '[User API] CRUD Operation Failure',
-  props<{ error: any }>()
+  props<{ error: ServerError }>()
 );
 
 // --- Filters & Pagination ---

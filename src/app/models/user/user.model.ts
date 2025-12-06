@@ -36,10 +36,17 @@ export interface PaginationConfig {
   itemsPerPage: number; // 5, 10, 20, 50, 100
 }
 
+export interface ServerError {
+  // A general message (e.g., "Invalid credentials" or "Validation failed")
+  globalMessage: string;
+  // Field-specific validation messages: { "email": ["already taken"], "password": ["too short"] }
+  fieldErrors: { [key: string]: string[] } | null;
+}
+
 export interface UserState {
   items: User[];
   loading: boolean;
-  error: any;
+  error: ServerError | null;
   pagination: PaginationConfig;
   filters: UserFilter;
 }

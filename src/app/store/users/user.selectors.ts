@@ -97,3 +97,8 @@ export const selectPagedUsers = createSelector(
     return filtered.slice(start, start + pagination.itemsPerPage);
   }
 );
+
+export const selectUserError = createSelector(
+  selectUserState,
+  (state) => state.error
+);

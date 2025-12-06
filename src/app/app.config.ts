@@ -4,7 +4,7 @@ import { provideState, provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 
 import { routes } from './app.routes';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { ProductReducer } from './store/product/product.reducer';
 import { ProductEffects } from './store/product/product.effects';
 import { UserReducer } from './store/users/user.reducer';
@@ -16,6 +16,7 @@ import { providePrimeNG } from 'primeng/config';
 import { initialState } from './store/login/user.reducer';
 import { AuthEffect } from './store/login/login.effects';
 import { MessageService } from 'primeng/api';
+import { UserTokenInterceptor } from './Interceptor/token/user-token.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -23,7 +24,12 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([
+        UserTokenInterceptor
+      ])
+    ),
 
     // Root store: NO reducer here
     provideStore(),

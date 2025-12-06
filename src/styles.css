@@ -8,6 +8,13 @@
 
   /**Font color**/
   --text-color: var(--color-gray-700);
+
+
+  --color-content-dark: oklch(27.8% 0.033 256.848);
+  --color-bg-dark: oklch(21% 0.034 264.665);
+
+  --color-content-light: oklch(98.5% 0.002 247.839);
+  --text-color-dark: oklch(27.8% 0.033 256.848)
   
   /* ... */
 }

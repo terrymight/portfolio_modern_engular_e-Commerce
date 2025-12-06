@@ -13,6 +13,9 @@ import { UserEffects } from './store/users/user.effects';
 import Aura from '@primeuix/themes/aura';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
+import { initialState } from './store/login/user.reducer';
+import { AuthEffect } from './store/login/login.effects';
+import { MessageService } from 'primeng/api';
 
 
 export const appConfig: ApplicationConfig = {
@@ -28,11 +31,13 @@ export const appConfig: ApplicationConfig = {
     // Feature state "products"
     provideState('products', ProductReducer),
     provideState('users', UserReducer),
+    provideState('auth', initialState),
 
     // Effects
-    provideEffects(ProductEffects, UserEffects),
+    provideEffects(ProductEffects, UserEffects, AuthEffect),
 
     provideAnimationsAsync(),
+    MessageService,
     providePrimeNG({
         theme: {
             preset: Aura

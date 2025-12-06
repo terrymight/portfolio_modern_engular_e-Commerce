@@ -1,0 +1,97 @@
+<p-toast />
+<p-dialog header="Header" [modal]="true" [(visible)]="visible" [style]="{ width: '35rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
+            <span class="font-bold whitespace-nowrap dark:text-white">Amy Elsner</span>
+        </div>
+    </ng-template>
+    
+    <form (ngSubmit)="registerNewUser()" [formGroup]="signupForm" #signupFormRef="ngForm">
+        <div *ngIf="signupForm.hasError('globalError')" 
+            class="text-sm text-red-700 dark:text-red-400 mb-4" 
+            aria-live="polite">
+            {{ signupForm.getError('globalError') }}
+        </div>
+
+        <span class="text-surface-500 dark:text-surface-400 block mb-8">Update your information.</span>
+
+        <div class="mb-4">
+            <label for="name" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                Name
+            </label>
+            <input 
+                pInputText 
+                id="name"
+                formControlName="name"
+                class="w-full bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" 
+                autocomplete="off" 
+            />
+            <p *ngIf="signupForm.get('name')?.hasError('serverError')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ signupForm.get('name')?.getError('serverError') }}
+            </p>
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                Email
+            </label>
+            <input 
+                pInputText 
+                id="email" 
+                formControlName="email"
+                class="w-full bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" 
+                autocomplete="off" 
+            />
+
+            <p *ngIf="signupForm.get('email')?.hasError('serverError')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ signupForm.get('email')?.getError('serverError') }}
+            </p>
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                Password
+            </label>
+            <p-password 
+            size="small"
+            id="password"
+            class="w-full" inputStyleClass="w-full bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            formControlName="password"
+            autocomplete="off" 
+            [showClear]="true"
+            [toggleMask]="true"
+            />
+
+            <p *ngIf="signupForm.get('password')?.hasError('serverError')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ signupForm.get('password')?.getError('serverError') }}
+            </p>
+        </div>
+
+
+        <div class="mb-4">
+            <label for="avatar" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
+                Avatar
+            </label>
+            <input 
+                pInputText 
+                id="avatar" 
+                formControlName="avatar"
+                class="w-full bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600" 
+                autocomplete="off" 
+            />
+            <p *ngIf="signupForm.get('avatar')?.hasError('serverError')" class="mt-1 text-sm text-red-600 dark:text-red-400">
+                {{ signupForm.get('avatar')?.getError('serverError') }}
+            </p>
+        </div>
+        <!-- global server error -->
+        
+        
+    </form>
+    <ng-template #footer>
+        <p-button label="Cancel" [text]="true" severity="secondary" (click)="closeDialog()" />
+        <p-button label="Save" [outlined]="true" severity="secondary" (click)="signupFormRef.ngSubmit.emit()" />
+    </ng-template>
+
+    
+</p-dialog>

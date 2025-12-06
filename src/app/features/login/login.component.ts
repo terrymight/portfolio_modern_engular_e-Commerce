@@ -1,54 +1,68 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import {FormGroup, FormControl, ReactiveFormsModule, Validators, FormBuilder} from '@angular/forms';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {FormGroup, ReactiveFormsModule, Validators, FormBuilder} from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
 import { LoginData } from '../../models/Login/LoginData.mode';
-import { LoginService } from '../../service/login/login.service';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { selectAuthError, selectIsLoading } from '../../store/login/user.selectors';
+import { AuthActions } from '../../store/login/login.actions';
+import { ModalService } from '../../service/modal/modal.service';
+import { Subject, takeUntil } from 'rxjs';
+import { UserRegistrationComponent } from '../user-registration/user-registration.component';
 
 
 @Component({
   selector: 'app-login.component',
-  imports: [ReactiveFormsModule, CommonModule, ButtonModule],
+  imports: [UserRegistrationComponent, ReactiveFormsModule, CommonModule, ButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit{
-
-  private readonly loginService = inject(LoginService);
+export class LoginComponent implements OnInit, OnDestroy{
   private fb = inject(FormBuilder);
-  
+  private store = inject(Store as any as new () => Store<any>); // replace `any` with your AppState type if available
+  private dialogService = inject(ModalService);
+
+  // Selectors
+  loading$ = this.store.select(selectIsLoading);
+  error$ = this.store.select(selectAuthError);
+
+  // reactive form
   loginForm!: FormGroup;
-  loading = false;
-  error: string | null = null;
+
+
+  private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-      this.loginForm = this.fb.group({
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]]
+      // match your error messaging (minLength referenced in getter)
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
+
   }
 
-  onSubmit():void {
-    if(this.loginForm.invalid) return;
-    const formData = this.loginForm.value;
-    this.error = null;
-    const logindto: LoginData = {email: formData.email!, password: formData.password!}
-    this.loading = true;
-    this.loginService.login(logindto).subscribe({
-      next: res => {
-        // send user to dashboard
-        this.loading = false;
-      },
-      error: error => { 
-        this.loading = false;
-        if (error.status == 401) {
-          this.error = 'Invalid credentials or expired tokens';
-        }
-       },
-    })
+  onSubmit(): void {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    const formData: LoginData = this.loginForm.value;
+    this.store.dispatch(
+      AuthActions.login({
+        request: { email: formData.email, password: formData.password },
+      })
+    );
   }
 
+  openDialog(): void {
+    this.dialogService.openDialog();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   get emailInvalid(): boolean {
     const c = this.loginForm.get('email');

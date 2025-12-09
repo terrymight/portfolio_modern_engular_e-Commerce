@@ -16,7 +16,11 @@ export class AuthEffect {
         ofType(AuthActions.login),
         switchMap(({ request }) => 
             this.loginService.login(request).pipe(
-                map((user) => AuthActions.loginSuccess({ user })),
+                map((user) => AuthActions.loginSuccess({ 
+                    user: user,
+                    access_token: user.access_token,
+                    refresh_token: user.refresh_token
+                })),
                 catchError((error) => {
                     const errorMessage = error.error?.message || 'Invalid Credentials'
                     return of(AuthActions.loginFailure({ error: errorMessage }))
@@ -27,12 +31,25 @@ export class AuthEffect {
 
     // Redirect on Login Success (Optional but common)
     loginSuccess$ = createEffect(() => this.action$.pipe(
-        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess),
-        tap((action) => {
-             localStorage.setItem('login-details', JSON.stringify(action.user));
+        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess, AuthActions.localStorageSuccess), 
+        tap(() => {
+            //console.log(AuthActions.localStorageSuccess)
             this.route.navigate(['/dashboard'])
         })
     ), { dispatch: false });
+
+    saveTokens$ = createEffect(() => this.action$.pipe(
+        // Listen for any action that provides valid tokens
+        ofType(AuthActions.loginSuccess, AuthActions.refreshTokenSuccess), 
+        tap((action) => {
+            // Log the token action for debugging:
+            // console.log('Saving tokens to localStorage', action.access_token);
+            
+            // CRITICAL FIX: Save tokens to persistent storage
+            localStorage.setItem('access_token', action.access_token);
+            localStorage.setItem('refresh_token', action.refresh_token);
+        })
+    ), { dispatch: false, useEffects: true }); // useEffects: true is optional but good for side effects
 
     // Register Effect
     register$ = createEffect(() => this.action$.pipe(
@@ -60,5 +77,43 @@ export class AuthEffect {
         }),
             ),
         ),
+    ));
+
+    // Logout 
+    logout$ = createEffect(() => this.action$.pipe(
+        ofType(AuthActions.logout),
+        // Perform cleanup side effects (API/Storage clear)
+        switchMap(() => this.loginService.logout().pipe(
+            // Always succeed in the UI flow, even if the API logout fails
+            map(() => AuthActions.logoutConfirmed()),
+            catchError(() => of(AuthActions.logoutConfirmed())) // Ensure state updates even on network error
+        ))
+    ));
+
+    // Confirm logout
+    logoutConfirmed$ = createEffect(() => this.action$.pipe(
+        ofType(AuthActions.logoutConfirmed, AuthActions.refreshTokenFailure),
+        tap(() => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            this.route.navigate(['/login']);
+        })
+    ), { dispatch: false });
+
+    loadTokens$ = createEffect(() => this.action$.pipe(
+        ofType(AuthActions.checkLocalStorage), // Triggered manually on app start
+        switchMap(() => {
+            const accessToken = localStorage.getItem('access_token');
+            const refreshToken = localStorage.getItem('refresh_token');
+
+            if (accessToken && refreshToken) {
+                // If tokens exist, restore them to the store
+                return of(AuthActions.localStorageSuccess({ 
+                    access_token: accessToken, 
+                    refresh_token: refreshToken 
+                }));
+            }
+            return of(AuthActions.logoutConfirmed()); // No tokens found, ensure state is clean
+        })
     ));
 }

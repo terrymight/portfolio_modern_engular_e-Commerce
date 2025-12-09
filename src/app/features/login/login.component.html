@@ -42,7 +42,17 @@
             <label for="password" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
                 Password
             </label>
-            <input
+            <p-password 
+            size="large"
+            id="password"
+            class="w-full" inputStyleClass="w-full bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+            formControlName="password"
+            autocomplete="off" 
+            [showClear]="true"
+            [toggleMask]="true"
+            [feedback]="false"
+            />
+            <!-- <input
                 id="password"
                 type="password"
                 formControlName="password"
@@ -54,7 +64,7 @@
                        focus:border-indigo-500 focus:ring-indigo-500"
                 aria-invalid="{{ loginForm.get('password')?.invalid }}"
                 aria-describedby="password-error"
-            />
+            /> -->
             <p id="password-error" class="mt-1 text-sm text-red-600 dark:text-red-400" *ngIf="passwordInvalid">
                 {{ passwordErrorMessage }}
             </p>

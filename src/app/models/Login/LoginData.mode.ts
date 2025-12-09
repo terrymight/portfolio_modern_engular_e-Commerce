@@ -26,10 +26,19 @@ export interface RegisterRequest {
   avatar: string;
 }
 
+export interface ServerError {
+  // A general message (e.g., "Invalid credentials" or "Validation failed")
+  globalMessage: string;
+  // Field-specific validation messages: { "email": ["already taken"], "password": ["too short"] }
+  fieldErrors: { [key: string]: string[] } | null;
+}
+
 export interface loginState {
   user: User | null;
+  access_token: string | null;
+  refresh_token: string | null;
   loading: boolean;
-  error: string | null;
+  error: ServerError | null;
   message: string | null;
 }
 
@@ -37,5 +46,7 @@ export const initialLoginState: loginState = {
   user: null,
   loading: false,
   error: null,
-  message: null
+  message: null,
+  access_token: null,
+  refresh_token: null,
 }

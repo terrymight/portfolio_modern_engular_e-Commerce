@@ -16,7 +16,8 @@ import { providePrimeNG } from 'primeng/config';
 import { initialState } from './store/login/user.reducer';
 import { AuthEffect } from './store/login/login.effects';
 import { MessageService } from 'primeng/api';
-import { UserTokenInterceptor } from './Interceptor/token/user-token.interceptor';
+import { UserTokenInterceptor } from './interceptor/token/user-token.interceptor';
+import { tokenRefreshInterceptor } from './interceptor/tokenRefresh/token-refresh.interceptor';
 
 
 export const appConfig: ApplicationConfig = {
@@ -27,7 +28,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withFetch(),
       withInterceptors([
-        UserTokenInterceptor
+        UserTokenInterceptor,
+        tokenRefreshInterceptor,
       ])
     ),
 

@@ -17,3 +17,18 @@ export const selectAuthMessage = createSelector(
     selectAuthState,
     (state) => state.message
 );
+
+export const selectIsAuthenticated = createSelector(
+    selectAuthState,
+    (state) => !!state.access_token && !!state.refresh_token
+);
+
+export const selectAccessToken = createSelector(
+    selectAuthState,
+    (state) => state.access_token
+);
+
+export const selectRefreshToken = createSelector(
+    selectAuthState,
+    (state) => state.refresh_token
+);

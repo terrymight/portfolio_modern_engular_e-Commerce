@@ -10,11 +10,12 @@ import { AuthActions } from '../../store/login/login.actions';
 import { ModalService } from '../../service/modal/modal.service';
 import { Subject, takeUntil } from 'rxjs';
 import { UserRegistrationComponent } from '../user-registration/user-registration.component';
+import { PasswordModule } from 'primeng/password';
 
 
 @Component({
   selector: 'app-login.component',
-  imports: [UserRegistrationComponent, ReactiveFormsModule, CommonModule, ButtonModule],
+  imports: [UserRegistrationComponent, PasswordModule, ReactiveFormsModule, CommonModule, ButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })

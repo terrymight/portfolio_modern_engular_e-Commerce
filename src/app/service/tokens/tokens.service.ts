@@ -22,4 +22,16 @@ export class TokenService {
         }
         return null;
     }
+
+    getAllToken<T = Record<string, any>>(): T | null {
+        const raw = localStorage.getItem('login-details');
+        if (!raw) return null;
+
+        try {
+            return JSON.parse(raw) as T;
+        } catch (err) {
+            console.error('Failed to parse login-details from localStorage', err);
+            return null;
+        }
+    }
 }

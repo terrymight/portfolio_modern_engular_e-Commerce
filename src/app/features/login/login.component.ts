@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy{
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       // match your error messaging (minLength referenced in getter)
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required]],
     });
 
   }

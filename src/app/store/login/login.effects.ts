@@ -42,10 +42,7 @@ export class AuthEffect {
         // Listen for any action that provides valid tokens
         ofType(AuthActions.loginSuccess, AuthActions.refreshTokenSuccess), 
         tap((action) => {
-            // Log the token action for debugging:
-            // console.log('Saving tokens to localStorage', action.access_token);
-            
-            // CRITICAL FIX: Save tokens to persistent storage
+            // Save tokens to persistent storage
             localStorage.setItem('access_token', action.access_token);
             localStorage.setItem('refresh_token', action.refresh_token);
         })

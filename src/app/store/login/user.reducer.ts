@@ -23,7 +23,7 @@ export const initialState = createReducer(
     on(AuthActions.loginFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: { globalMessage: error, fieldErrors: null }
+        error: error
     })),
 
     // Register Reducers
@@ -41,7 +41,7 @@ export const initialState = createReducer(
     on(AuthActions.registerFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: { globalMessage: "Something went wrong. Please log in again.", fieldErrors: null }
+        error: error
     })),
 
     // Forgot Password Reducers
@@ -59,7 +59,7 @@ export const initialState = createReducer(
     on(AuthActions.forgetPasswordFailure, (state, { error }) => ({
         ...state,
         loading: false,
-        error: { globalMessage: "Session expired. Please log in again.", fieldErrors: null }
+        error: error
     })),
 
     on(AuthActions.localStorageSuccess, (state, { access_token, refresh_token }) => ({

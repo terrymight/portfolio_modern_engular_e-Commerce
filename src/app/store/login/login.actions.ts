@@ -1,5 +1,5 @@
 import { createAction, createActionGroup, emptyProps, props } from "@ngrx/store";
-import { loginRequest, RegisterRequest, User } from "../../models/Login/LoginData.mode";
+import { loginRequest, RegisterRequest, ServerError, User } from "../../models/Login/LoginData.mode";
 
 export const AuthActions = createActionGroup({
     source: 'Auth',
@@ -7,7 +7,7 @@ export const AuthActions = createActionGroup({
         // login flow
         'Login': props<{ request: loginRequest }>(),
         'Login Success': props<{ user: User, access_token: string, refresh_token: string }>(),
-        'Login Failure': props<{ error: string }>(),
+        'Login Failure': props<{ error: ServerError }>(),
 
         // Logout Flow
         'Logout': emptyProps(),
@@ -21,12 +21,12 @@ export const AuthActions = createActionGroup({
         // Register flow
         'Register' : props<{ request: RegisterRequest }>(),
         'Register Success' : props<{ user: User }>(),
-        'Register Failure' : props<{ error: string }>(),
+        'Register Failure' : props<{ error: ServerError }>(),
 
         // Forget Password
         'Forget Password' : props<{ email: string }>(),
         'Forget Password Success' : props<{ message: string }>(),
-        'Forget Password Failure' : props<{ error: string }>(),
+        'Forget Password Failure' : props<{ error: ServerError }>(),
 
         // For Rehydrating State on App Load
         'Check Local Storage': emptyProps(),

@@ -52,19 +52,7 @@
             [toggleMask]="true"
             [feedback]="false"
             />
-            <!-- <input
-                id="password"
-                type="password"
-                formControlName="password"
-                autocomplete="off"
-                class="block w-full rounded-md px-3 py-2 border focus:ring-1 
-                       border-gray-300 dark:border-gray-600
-                       bg-white dark:bg-gray-700
-                       text-gray-900 dark:text-white
-                       focus:border-indigo-500 focus:ring-indigo-500"
-                aria-invalid="{{ loginForm.get('password')?.invalid }}"
-                aria-describedby="password-error"
-            /> -->
+            
             <p id="password-error" class="mt-1 text-sm text-red-600 dark:text-red-400" *ngIf="passwordInvalid">
                 {{ passwordErrorMessage }}
             </p>

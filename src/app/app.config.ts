@@ -11,6 +11,8 @@ import { UserReducer } from './store/users/user.reducer';
 import { UserEffects } from './store/users/user.effects';
 
 import Aura from '@primeuix/themes/aura';
+import Material from '@primeuix/themes/material';
+
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import { initialState } from './store/login/user.reducer';
@@ -48,7 +50,7 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     providePrimeNG({
         theme: {
-            preset: Aura
+            preset: Material
         }
     })
   ],

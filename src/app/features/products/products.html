@@ -1,116 +1,222 @@
-<div class="container">
-  <h1>Product Management</h1>
+<div class="flex bg-gray-50 dark:bg-gray-900">
+  
+  <button 
+    (click)="mobileFiltersOpen = !mobileFiltersOpen"
+    class="md:hidden fixed top-4 left-4 z-50 p-3 rounded-full bg-blue-600 text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    aria-label="Toggle Filters"
+  >
+    <i class="pi pi-filter text-lg"></i>
+  </button>
 
-  <div class="controls-panel">
-    <div class="filter-group">
-      <select [(ngModel)]="selectedCategoryId" (change)="applyFilters()">
-        <option [ngValue]="null">All Categories</option>
-        <option *ngFor="let cat of categories$ | async" [ngValue]="cat.id">
-          {{ cat.name }}
-        </option>
-      </select>
-
-      <input
-        type="date"
-        [(ngModel)]="startDate"
-        (change)="applyFilters()"
-        placeholder="Start Date"
-      />
-      <input
-        type="date"
-        [(ngModel)]="endDate"
-        (change)="applyFilters()"
-        placeholder="End Date"
-      />
-
-      <input
-        type="text"
-        [(ngModel)]="searchQuery"
-        (ngModelChange)="applyFilters()"
-        placeholder="Search products..."
-      />
-
-      <button (click)="resetFilters()">Reset</button>
-    </div>
-
-    <div class="action-group">
-      <button class="btn-primary" (click)="createNewProduct()">
-        + Create New Product
-      </button>
-    </div>
-  </div>
-
-  <ng-container *ngIf="viewData$ | async as vm">
-    <div class="pagination-controls top">
-      <label
-        >Show
-        <select
-          [ngModel]="vm.itemsPerPage"
-          (ngModelChange)="onPageSizeChange($event)"
+  <aside 
+    [ngClass]="{
+      'translate-x-0': mobileFiltersOpen,
+      '-translate-x-full': !mobileFiltersOpen
+    }"
+    class="w-80 px-5 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg fixed md:sticky top-0 h-screen overflow-y-auto z-40 md:z-auto transition-transform duration-300 ease-in-out md:translate-x-0"
+  >
+    
+    <div class="pt-24 pb-6"> 
+        <h3 class="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+            Filters
+        </h3>
+        
+        <button 
+          (click)="mobileFiltersOpen = false"
+          class="md:hidden absolute top-4 right-4 text-gray-600 dark:text-gray-300 hover:text-red-500"
         >
-          <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
-            {{ size }}
-          </option>
-        </select>
-        entries
-      </label>
-      <span>Total: {{ vm.totalItems }} records</span>
-    </div>
+          <i class="pi pi-times text-xl"></i>
+        </button>
 
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Image</th>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Price</th>
-          <th>Created At</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of vm.data">
-          <td>{{ product.id }}</td>
-          <td><img [src]="product.images[0]" height="100" width="100" class="thumb" /></td>
-          <td>
-            <strong>{{ product.title }}</strong>
-            <p class="small-desc">
-              {{ product.description | slice: 0:50 }}...
-            </p>
-          </td>
-          <td>{{ product.category.name }}</td>
-          <td>${{ product.price }}</td>
-          <td>{{ product.creationAt | date: 'mediumDate' }}</td>
-          <td>
-            <button (click)="editProduct(product)">Edit</button>
-            <button (click)="deleteProduct(product.id)" class="btn-danger">
-              Delete
+        <div class="mb-6">
+            <label for="search_label" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                Search Products
+            </label>
+            <div class="relative">
+                <input 
+                    pInputText
+                    [(ngModel)]="searchQuery"
+                    (ngModelChange)="applyFilters()"
+                    id="search_label"
+                    autocomplete="off"
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    placeholder="e.g., Laptop, Shirt"
+                />
+                <i class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-400"></i>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                Category
+            </label>
+            <select
+                class="w-full bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 dark:border-gray-600 border border-gray-300 rounded-lg p-2.5 focus:ring-blue-500 focus:border-blue-500"
+                [(ngModel)]="selectedCategoryId"
+                (change)="applyFilters()"
+            >
+                <option [ngValue]="null">All Categories</option>
+                <option *ngFor="let cat of categories$ | async" [ngValue]="cat.id">
+                    {{ cat.name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-6">
+            <label for="startDate" class=" w-full block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                Start Date
+            </label>
+            <p-datepicker
+                id="startDate"
+                inputId="startDate"
+                [(ngModel)]="startDate"
+                (change)="applyFilters()"
+                [iconDisplay]="'input'"
+                [showIcon]="true"
+                class="w-full"
+            ></p-datepicker>
+        </div>
+
+        <div class="mb-8">
+            <label for="endDate" class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
+                End Date
+            </label>
+            <p-datepicker
+                id="endDate"
+                inputId="endDate"
+                [(ngModel)]="endDate"
+                (change)="applyFilters()"
+                [iconDisplay]="'input'"
+                [showIcon]="true"
+                class="w-full"
+            ></p-datepicker>
+        </div>
+
+        <div>
+            <button
+                type="button"
+                class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg px-4 py-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+                (click)="resetFilters()"
+            >
+                Reset Filters
             </button>
-          </td>
-        </tr>
-        <tr *ngIf="vm.data.length === 0">
-          <td colspan="7">No products found matching filters.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="pagination-footer">
-      <button
-        [disabled]="vm.currentPage === 1"
-        (click)="onPageChange(vm.currentPage - 1)"
-      >
-        Previous
-      </button>
-
-      <span>Page {{ vm.currentPage }} of {{ vm.totalPages }}</span>
-
-      <button
-        [disabled]="vm.currentPage >= vm.totalPages"
-        (click)="onPageChange(vm.currentPage + 1)"
-      >
-        Next
-      </button>
+        </div>
     </div>
-  </ng-container>
+  </aside>
+  
+  <main class="flex-1 px-6 py-24"> 
+    <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+      Product Catalog
+    </h2>
+    
+    <div *ngIf="loading$ | async" class="animate-pulse">
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div *ngFor="let i of [1,2,3,4,5,6,7,8]" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 p-4">
+                <div class="h-48 bg-gray-300 dark:bg-gray-700 rounded-lg mb-4"></div>
+                <div class="h-6 w-3/4 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
+                <div class="h-4 w-1/3 bg-gray-300 dark:bg-gray-700 rounded mb-4"></div>
+                <div class="h-10 w-full bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="viewData$ | async as vm">
+      
+      <div class="flex justify-between items-center mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        
+        <label class="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300">
+          <span class="font-medium">Show</span>
+          <select
+            [ngModel]="vm.itemsPerPage"
+            (ngModelChange)="onPageSizeChange($event)"
+            class="p-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
+              {{ size }}
+            </option>
+          </select>
+          <span class="font-medium">entries</span>
+        </label>
+        
+        <span class="font-bold text-gray-800 dark:text-gray-200 text-sm">
+          Total: {{ vm.totalItems }} records
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        
+        <div *ngFor="let product of vm.data" 
+             class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200 dark:border-gray-700">
+          
+          <div class="h-48 w-full overflow-hidden">
+              <img 
+                  [src]="product.images[0]" 
+                  alt="{{ product.title }}" 
+                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+          </div>
+
+          <div class="p-4">
+            <h4 class="text-lg font-bold mb-1 text-gray-900 dark:text-white truncate">
+              {{ product.title }}
+            </h4>
+            
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 mb-2">
+                {{ product.category.name }}
+            </span>
+            
+            <p class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mb-2">
+              ${{ product.price | number:'1.2-2' }}
+            </p>
+            
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+              {{ product.description }}
+            </p>
+            
+            <button
+              (click)="addToCart(product)"
+              class="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg px-4 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+              <i class="pi pi-shopping-cart mr-2"></i>
+              Add to Cart
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="vm.data.length === 0" class="md:col-span-2 lg:col-span-3 xl:col-span-4 p-8 text-center bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+          <p class="text-xl font-semibold text-gray-700 dark:text-gray-300">
+            No products found matching your current filters.
+          </p>
+          <p class="text-gray-500 dark:text-gray-400 mt-2">
+            Try adjusting your search query, category, or date range.
+          </p>
+        </div>
+
+      </div>
+      
+      <div class="mt-8 flex justify-end items-center space-x-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+          Page **{{ vm.currentPage }}** of **{{ vm.totalPages }}**
+        </span>
+        
+        <button
+          [disabled]="vm.currentPage === 1"
+          (click)="onPageChange(vm.currentPage - 1)"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150"
+        >
+          <i class="pi pi-arrow-left mr-1"></i> Previous
+        </button>
+
+        <button
+          [disabled]="vm.currentPage >= vm.totalPages"
+          (click)="onPageChange(vm.currentPage + 1)"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition duration-150"
+        >
+          Next <i class="pi pi-arrow-right ml-1"></i>
+        </button>
+      </div>
+
+    </ng-container>
+  </main>
 </div>

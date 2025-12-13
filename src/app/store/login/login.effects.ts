@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { LoginService } from "../../service/login/login.service";
 import { AuthActions } from './login.actions';
-import { catchError, map, of, switchMap, tap } from "rxjs";
+import { catchError, EMPTY, map, of, switchMap, tap } from "rxjs";
 
 @Injectable()
 export class AuthEffect {
@@ -31,7 +31,7 @@ export class AuthEffect {
 
     // Redirect on Login Success (Optional but common)
     loginSuccess$ = createEffect(() => this.action$.pipe(
-        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess, AuthActions.localStorageSuccess), 
+        ofType(AuthActions.loginSuccess, AuthActions.registerSuccess), 
         tap(() => {
             //console.log(AuthActions.localStorageSuccess)
             this.route.navigate(['/dashboard'])
@@ -110,7 +110,8 @@ export class AuthEffect {
                     refresh_token: refreshToken 
                 }));
             }
-            return of(AuthActions.logoutConfirmed()); // No tokens found, ensure state is clean
+            // If no tokens found, just do nothing.
+            return EMPTY;
         })
     ));
 }

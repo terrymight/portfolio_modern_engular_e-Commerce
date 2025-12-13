@@ -1,0 +1,21 @@
+/* Ensure this is NOT in a component's encapsulated CSS file */
+
+.p-reset-button.p-button-outlined {
+    /* Set Default Colors */
+    --tw-border-opacity: 1;
+    border-color: red !important; /* Force border color */
+    color: red !important;        /* Force text color */
+}
+
+/* Override Hover State */
+.p-reset-button.p-button-outlined:hover {
+    background: rgba(255, 0, 0, 0.05) !important; /* Light red background on hover */
+    border-color: darkred !important;
+    color: darkred !important;
+}
+
+/* Optional: Dark Mode Override */
+.dark .p-reset-button.p-button-outlined {
+    border-color: white !important;
+    color: white !important;
+}

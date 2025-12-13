@@ -14,6 +14,7 @@ export const productRoutes: Routes = [
     },
     {
         path: 'user-management',
+        canActivate:[AuthGuard],
         loadComponent: () => import('./user/user.component')
         .then(m => m.UserComponent )
     },

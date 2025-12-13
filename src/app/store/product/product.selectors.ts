@@ -3,12 +3,12 @@ import { ProductState } from "../../models/product/product.model";
 
 export const selectProductState = createFeatureSelector<ProductState>('products');
 
-// 1. Basic Selectors
+// Basic Selectors
 export const selectAllProducts = createSelector(selectProductState, (state) => state.items);
 export const selectPagination = createSelector(selectProductState, (state) => state.pagination);
 export const selectFilters = createSelector(selectProductState, (state) => state.filters);
 
-// 2. Filter Logic (Category + Date Range)
+// Filter Logic (Category + Date Range)
 export const selectFilteredProducts = createSelector(
     selectAllProducts, 
     selectFilters,
@@ -47,7 +47,7 @@ export const selectFilteredProducts = createSelector(
     }
 )
 
-// 3. Pagination Logic (Slicing the Filtered List)
+// Pagination Logic (Slicing the Filtered List)
 export const selectPaginatedProducts = createSelector(
   selectFilteredProducts,
   selectPagination,
@@ -64,9 +64,15 @@ export const selectPaginatedProducts = createSelector(
   }
 );
 
-// 4. Extract unique categories for the dropdown
+// Extract unique categories for the dropdown
 export const selectCategories = createSelector(selectAllProducts, (products) => {
   const unique = new Map();
   products.forEach(p => unique.set(p.category.id, p.category));
   return Array.from(unique.values());
 });
+
+// Loading State
+export const selectProductLoading = createSelector(
+  selectProductState,
+  (state) => state.loading
+)

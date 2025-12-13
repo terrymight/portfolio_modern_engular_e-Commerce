@@ -9,11 +9,28 @@ import {
   UpdateProductDto
 } from '../../models/product/product.model';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { DatePickerModule } from 'primeng/datepicker';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-products',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    InputIconModule,
+    IconFieldModule,
+    InputTextModule,
+    FloatLabelModule,
+    FormsModule,
+    DatePickerModule,
+    ButtonModule,
+  ],
   templateUrl: './products.html',
   styleUrl: './products.css',
   standalone: true
@@ -23,12 +40,14 @@ export class Products implements OnInit {
 
   viewData$ = this.store.select(ProductSelectors.selectPaginatedProducts);
   categories$ = this.store.select(ProductSelectors.selectCategories);
+  loading$ = this.store.select(ProductSelectors.selectProductLoading);
 
   selectedCategoryId: number | null = null;
   startDate = '';
   endDate = '';
   searchQuery = '';
   pageSizeOptions = [5, 10, 20, 50, 100];
+  mobileFiltersOpen:boolean = false;
 
   ngOnInit(): void {
     this.store.dispatch(ProductActions.loadProducts());
@@ -48,6 +67,10 @@ export class Products implements OnInit {
         }
       })
     );
+  }
+
+  addToCart(val: any){
+    console.log(val)
   }
 
   resetFilters() {

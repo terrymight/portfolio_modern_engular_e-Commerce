@@ -32,6 +32,7 @@ export class AuthEffect {
     // Redirect on Login Success (Optional but common)
     loginSuccess$ = createEffect(() => this.action$.pipe(
         ofType(AuthActions.loginSuccess, AuthActions.registerSuccess), 
+        // ofType(AuthActions.loginSuccess, AuthActions.registerSuccess, AuthActions.localStorageSuccess), 
         tap(() => {
             //console.log(AuthActions.localStorageSuccess)
             this.route.navigate(['/dashboard'])
@@ -110,8 +111,8 @@ export class AuthEffect {
                     refresh_token: refreshToken 
                 }));
             }
-            // If no tokens found, just do nothing.
-            return EMPTY;
+return EMPTY;
+            // eturn of(AuthActions.logoutConfirmed()); // No tokens found, ensure state is clean
         })
     ));
 }

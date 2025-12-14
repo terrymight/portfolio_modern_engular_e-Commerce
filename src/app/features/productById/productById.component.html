@@ -1,0 +1,141 @@
+<div class="flex justify-center bg-gray-50 dark:bg-gray-900 min-h-screen mt-14">
+  
+  <div class="w-full xl:w-[80%] max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+
+    <ng-container *ngIf="selectedProduct$ | async as product">
+      <nav class="flex mb-8 text-sm" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+          
+          <li class="inline-flex items-center">
+            <a routerLink="/" class="inline-flex items-center text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-500">
+              <i class="pi pi-home me-2"></i>
+              Home
+            </a>
+            >
+          </li>
+          
+          <li aria-current="page">
+            <div class="flex items-center">
+              <i class="pi pi-angle-right text-gray-400 dark:text-gray-500 mx-1"></i>
+              <span class="ms-1 text-gray-500 dark:text-gray-300 md:ms-2 font-medium truncate max-w-xs sm:max-w-sm">
+                {{ product.title }}
+              </span>
+            </div>
+          </li>
+
+        </ol>
+      </nav>
+    </ng-container>
+    <ng-container *ngIf="loading$ | async">
+      </ng-container>
+
+    <ng-container *ngIf="selectedProduct$ | async as product">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+
+        <div class="lg:col-span-2 space-y-6">
+          
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+            <img 
+              [src]="mainImageSrc || product.images[0]" 
+              [alt]="product.title" 
+              class="w-full h-auto object-cover transition-opacity duration-500"
+            />
+          </div>
+
+          <div class="flex space-x-4 overflow-x-auto p-2">
+            <img *ngFor="let img of product.images"
+                 [src]="img" 
+                 alt="Product thumbnail" 
+                 (click)="selectImage(img)"
+                 [class.border-blue-500]="img === mainImageSrc"
+                 [class.border-transparent]="img !== mainImageSrc"
+                 class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 hover:border-blue-500 transition"
+            >
+          </div>
+
+          <div class="mt-10 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700">
+              Product Details
+            </h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+              {{ product.description }}
+            </p>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1 space-y-8">
+
+          <div class="sticky top-28 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700">
+
+            <h1 class="text-4xl font-extrabold mb-2 text-gray-900 dark:text-white">
+              {{ product.title }}
+            </h1>
+            <a [routerLink]="['/category', product.category.slug]" class="text-base text-blue-600 dark:text-blue-400 hover:underline mb-6 block">
+              {{ product.category.name }}
+            </a>
+
+            <p class="text-5xl font-extrabold text-red-600 dark:text-red-400 mb-6">
+              ${{ product.price | number:'1.2-2' }}
+            </p>
+            
+            <div class="mb-6">
+              <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity</label>
+              <input 
+                id="quantity" 
+                type="number" 
+                value="1" 
+                min="1"
+                class="w-20 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <div class="space-y-4">
+              <button
+                class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-lg px-4 py-3 transition-colors shadow-lg shadow-blue-500/50 dark:shadow-blue-700/50 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-700/50"
+              >
+                <i class="pi pi-bolt mr-3"></i> Buy Now
+              </button>
+
+              <button
+                class="w-full flex items-center justify-center bg-transparent border-2 border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-700 text-lg font-semibold rounded-lg px-4 py-3 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <i class="pi pi-shopping-cart mr-3"></i> Add to Cart
+              </button>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700 space-y-3 text-sm text-gray-600 dark:text-gray-400">
+              <p class="flex items-center">
+                <i class="pi pi-truck mr-2 text-lg text-green-500"></i>
+                **Free Delivery** | Estimated arrival: 3-5 days
+              </p>
+              <p class="flex items-center">
+                <i class="pi pi-tag mr-2 text-lg text-blue-500"></i>
+                SKU: {{ product.id }}
+              </p>
+              <p class="flex items-center">
+                <i class="pi pi-calendar-plus mr-2 text-lg text-purple-500"></i>
+                Added: {{ product.creationAt | date:'mediumDate' }}
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!(loading$ | async) && !(selectedProduct$ | async)">
+        <div class="text-center py-20 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+            <i class="pi pi-exclamation-triangle text-6xl text-red-500 mb-4"></i>
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Product Not Found</h3>
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              The product you are looking for may have been removed or the ID is incorrect.
+            </p>
+            <a routerLink="/products" class="mt-6 inline-flex items-center text-blue-600 hover:underline font-medium">
+              <i class="pi pi-arrow-left mr-2"></i> Back to Product Catalog
+            </a>
+        </div>
+    </ng-container>
+
+  </div>
+</div>

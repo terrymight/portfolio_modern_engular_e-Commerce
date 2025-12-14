@@ -68,5 +68,25 @@ export const ProductReducer = createReducer(
   on(ProductActions.apiCallFailure, (state, { error }) => ({
     ...state,
     error
+  })),
+
+  on(ProductActions.loadProductsById, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+    selectedProduct: null
+  })),
+
+  on(ProductActions.loadProductByIdSuccess, (state, { product }) => ({
+    ...state,
+    loading: false,
+    selectedProduct: product
+  })),
+
+  on(ProductActions.loadProductByIdFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error,
+    selectedProduct: null
   }))
 );

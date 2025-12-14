@@ -61,4 +61,19 @@ export class ProductEffects {
             ),
         ),
     );
+
+    // Effect for getting a product
+    loadProductById$ = createEffect(() => 
+        this.actions$.pipe(
+            ofType(ProductActions.loadProductsById),
+            switchMap(action => 
+                this.productService.getProductById(action.id).pipe(
+                    map(product => 
+                        ProductActions.loadProductByIdSuccess({ product: product }),
+                        catchError(error => of(ProductActions.loadProductByIdFailure({ error: error })))
+                    )
+                ),
+            )
+        )
+    );
 }

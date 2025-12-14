@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -30,6 +31,7 @@ import { ButtonModule } from 'primeng/button';
     FormsModule,
     DatePickerModule,
     ButtonModule,
+    RouterLink,
   ],
   templateUrl: './products.html',
   styleUrl: './products.css',

@@ -76,3 +76,8 @@ export const selectProductLoading = createSelector(
   selectProductState,
   (state) => state.loading
 )
+
+export const selectSelectedProduct = createSelector(
+  selectProductState,
+  (state) => state.selectedProduct
+)

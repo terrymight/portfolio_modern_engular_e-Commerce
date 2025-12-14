@@ -61,3 +61,19 @@ export const setPageSize = createAction(
   '[Product UI] Set Page Size',
   props<{ size: number }>()
 );
+
+
+export const loadProductsById = createAction(
+  '[Product API] Load Product By ID',
+  props<{ id: number }>()
+);
+
+export const loadProductByIdSuccess = createAction(
+  '[Product API] Load Product By ID Success',
+  props<{ product: Product }>(),
+);
+
+export const loadProductByIdFailure = createAction (
+  '[Product API] Load Product By ID Failure',
+  props<{ error: any }>(),
+);

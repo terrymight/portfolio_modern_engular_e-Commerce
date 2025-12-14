@@ -21,6 +21,15 @@ export class ProductService {
   }
 
   /**
+   * [GET] get a single product by adding the id as a parameter
+   * @param productId product Id
+   * @returns single product
+   */
+  getProductById(productId: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/products/${productId}`)
+  }
+
+  /**
    * [POST] /products
    */
   createProduct(product: CreateProductDto): Observable<Product> {

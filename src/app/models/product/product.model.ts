@@ -54,6 +54,7 @@ export interface ProductState {
   pagination: PaginationConfig;
   filters: ProductFilter;
   error: any;
+  selectedProduct: Product | null;
 }
 
 export const initialState: ProductState = {
@@ -64,5 +65,6 @@ export const initialState: ProductState = {
     itemsPerPage: 10 // Default
   },
   filters: {},
-  error: null
+  error: null,
+  selectedProduct: null,
 };

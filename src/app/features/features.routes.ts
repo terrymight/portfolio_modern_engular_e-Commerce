@@ -24,4 +24,9 @@ export const productRoutes: Routes = [
         loadComponent: () => import('./dashboard/dashboard.component')
         .then(m => m.DashboadComponent )
     },
+    {
+        path: 'single-product/:productId',
+        loadComponent: () => import('./productById/productById.component')
+        .then(m => m.SingleProductComponent )
+    },
 ];
